@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elastiklik — Guk Qonuni</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap');
+:root{--bg:#07090f;--panel:#0e1420;--border:#1b2840;--accent:#3b82f6;--green:#6fff5c;--yellow:#ffc947;--red:#ff6060;--text:#dde6f5;--muted:#4a6080;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;height:100vh;overflow:hidden;display:flex;flex-direction:column;}
+header{display:flex;align-items:center;gap:12px;padding:8px 20px;border-bottom:1px solid var(--border);background:linear-gradient(90deg,#07090f,#00081a,#07090f);flex-shrink:0;}
+.badge{background:var(--accent);color:#fff;font-family:'Space Mono',monospace;font-size:9px;font-weight:700;padding:3px 9px;letter-spacing:2px;border-radius:2px;}
+.htitle{font-size:14px;font-weight:800;}.htitle span{color:var(--accent);}
+.hsub{font-family:'Space Mono',monospace;font-size:9px;color:var(--muted);margin-left:auto;}
+.brand{display:flex;align-items:center;gap:6px;background:linear-gradient(135deg,rgba(59,130,246,.12),rgba(111,255,92,.08));border:1px solid rgba(59,130,246,.3);border-radius:20px;padding:4px 14px;margin-left:10px;flex-shrink:0;}
+.brand-txt{font-family:'Space Mono',monospace;font-size:10px;font-weight:700;background:linear-gradient(90deg,#3b82f6,#6fff5c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:1px;}
+.statusbar{background:#0a0f1c;border-bottom:1px solid var(--border);padding:5px 20px;display:flex;align-items:center;gap:14px;font-family:'Space Mono',monospace;font-size:11px;flex-shrink:0;}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:bl 1s infinite;flex-shrink:0;}
+@keyframes bl{0%,100%{opacity:1}50%{opacity:.2}}
+#statusTxt{color:var(--accent);}
+.chips{display:flex;gap:6px;margin-left:auto;}
+.chip{background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.2);border-radius:10px;padding:2px 9px;font-size:10px;color:var(--muted);}
+.chip span{color:var(--accent);}
+.body{display:grid;grid-template-columns:215px 1fr 260px;flex:1;overflow:hidden;}
+.left{background:var(--panel);border-right:1px solid var(--border);overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:9px;}
+.stitle{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:3px;color:var(--accent);text-transform:uppercase;margin-bottom:3px;}
+.card{background:rgba(255,255,255,.025);border:1px solid var(--border);border-radius:8px;padding:10px;}
+.card label{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:7px;}
+.vb{font-family:'Space Mono',monospace;font-size:11px;color:var(--accent);background:rgba(59,130,246,.12);padding:2px 7px;border-radius:3px;}
+input[type=range]{width:100%;-webkit-appearance:none;height:4px;background:var(--border);border-radius:2px;cursor:pointer;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;background:var(--accent);border-radius:50%;cursor:pointer;box-shadow:0 0 8px rgba(59,130,246,.7);}
+.fbox{background:rgba(59,130,246,.04);border:1px solid rgba(59,130,246,.15);border-radius:7px;padding:9px;}
+.frow{display:flex;gap:6px;margin-bottom:4px;font-family:'Space Mono',monospace;font-size:9px;}
+.fl{color:var(--muted);min-width:22px;}.fe{color:var(--accent);}
+.steps{display:flex;flex-direction:column;gap:3px;}
+.step{display:flex;align-items:center;gap:7px;padding:5px 8px;border-radius:5px;font-size:10px;color:var(--muted);border:1px solid transparent;transition:all .3s;}
+.step.active{background:rgba(59,130,246,.07);border-color:rgba(59,130,246,.2);color:var(--accent);}
+.step.done{color:var(--green);}
+.snum{font-family:'Space Mono',monospace;font-size:9px;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.05);flex-shrink:0;}
+.step.active .snum{background:rgba(59,130,246,.2);}
+.step.done .snum{background:rgba(111,255,92,.12);color:var(--green);}
+.btn{width:100%;padding:9px;border:none;border-radius:7px;font-family:'Syne',sans-serif;font-weight:700;font-size:12px;cursor:pointer;transition:all .2s;margin-top:4px;}
+.btn-p{background:linear-gradient(135deg,#3b82f6,#1d4ed8);color:#fff;}
+.btn-p:hover{transform:translateY(-1px);box-shadow:0 5px 18px rgba(59,130,246,.4);}
+.btn-g{background:linear-gradient(135deg,#6fff5c,#33cc22);color:#000;}
+.btn-g:disabled{opacity:.35;}
+.btn-r{background:rgba(255,255,255,.06);color:var(--text);border:1px solid var(--border);font-size:11px;}
+.center{position:relative;overflow:hidden;background:#040810;}
+#simCanvas{display:block;width:100%;height:100%;}
+.instr-bar{position:absolute;bottom:0;left:0;right:0;background:rgba(4,8,16,.92);border-top:1px solid var(--border);padding:5px 18px;font-size:10px;color:var(--muted);text-align:center;}
+.right{background:var(--panel);border-left:1px solid var(--border);overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:9px;}
+.rc{background:rgba(255,255,255,.025);border:1px solid var(--border);border-radius:8px;padding:10px;}
+.rc.hi{border-color:rgba(59,130,246,.3);background:rgba(59,130,246,.05);}
+.rl{font-family:'Space Mono',monospace;font-size:8px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:3px;}
+.rv{font-size:20px;font-weight:800;line-height:1;color:#fff;}
+.ru{font-family:'Space Mono',monospace;font-size:9px;color:var(--muted);margin-top:2px;}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+table{width:100%;border-collapse:collapse;font-family:'Space Mono',monospace;font-size:9px;}
+th{color:var(--accent);font-size:7px;letter-spacing:1px;border-bottom:1px solid var(--border);padding:4px 2px;text-align:center;}
+td{padding:3px 2px;border-bottom:1px solid rgba(255,255,255,.03);text-align:center;}
+#graphCanvas{display:block;width:100%;border-radius:8px;border:1px solid var(--border);}
+.final-card{background:rgba(59,130,246,.05);border:1px solid rgba(59,130,246,.2);border-radius:8px;padding:12px;display:none;}
+.err-row{display:flex;justify-content:space-between;margin-top:5px;font-family:'Space Mono',monospace;font-size:10px;}
+.err-row span:first-child{color:var(--muted);}
+.err-row span:last-child{color:var(--yellow);}
+</style>
+</head>
+<body>
+<div id="startScreen" style="position:fixed;inset:0;z-index:9999;background:radial-gradient(ellipse at 50% 40%,#000c1f 0%,#07090f 70%);display:flex;align-items:center;justify-content:center;">
+  <canvas id="bgCanvas" style="position:absolute;inset:0;width:100%;height:100%;opacity:.4;pointer-events:none"></canvas>
+  <div style="position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:18px;max-width:560px;padding:20px;text-align:center;">
+    <div style="display:flex;align-items:center;gap:10px;"><div style="background:#3b82f6;color:#fff;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;padding:4px 14px;letter-spacing:2px;border-radius:2px;">MEXANIKA · LAB</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#4a6080;letter-spacing:2px;">GUK QONUNI · ELASTIKLIK</div></div>
+    <div style="width:100px;height:100px;border-radius:50%;background:radial-gradient(circle,rgba(59,130,246,.18),rgba(59,130,246,.02));border:2px solid rgba(59,130,246,.4);display:flex;align-items:center;justify-content:center;box-shadow:0 0 55px rgba(59,130,246,.3);animation:pulseEl 2.5s ease-in-out infinite;"><span style="font-size:44px;">🌀</span></div>
+    <h1 style="font-size:20px;font-weight:800;color:#fff;">Prujina Elastikligi — <span style="color:#3b82f6;">Guk Qonuni: F = k·x</span></h1>
+    <p style="font-size:11px;color:#4a6080;font-family:'Space Mono',monospace;">F = k·x · k = mg/Δx · T = 2π√(m/k)</p>
+    <div style="background:rgba(59,130,246,.05);border:1px solid rgba(59,130,246,.15);border-radius:12px;padding:15px;width:100%;text-align:left;">
+      <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:2px;color:#3b82f6;margin-bottom:8px;">BAJARISH TARTIBI</div>
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <div style="display:flex;align-items:center;gap:8px;font-size:11px;color:#c5d3e8;"><div style="width:20px;height:20px;border-radius:50%;background:rgba(59,130,246,.2);display:flex;align-items:center;justify-content:center;font-size:9px;color:#3b82f6;flex-shrink:0;">1</div>m (yuk massasi) va k (prujina qattiqligi) ni tanlang</div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:11px;color:#c5d3e8;"><div style="width:20px;height:20px;border-radius:50%;background:rgba(59,130,246,.2);display:flex;align-items:center;justify-content:center;font-size:9px;color:#3b82f6;flex-shrink:0;">2</div>Prujina cho'zilishini Δx = mg/k formuladan hisoblang</div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:11px;color:#c5d3e8;"><div style="width:20px;height:20px;border-radius:50%;background:rgba(59,130,246,.2);display:flex;align-items:center;justify-content:center;font-size:9px;color:#3b82f6;flex-shrink:0;">3</div>Tebranish davrini T = 2π√(m/k) aniqlang</div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:11px;color:#c5d3e8;"><div style="width:20px;height:20px;border-radius:50%;background:rgba(59,130,246,.2);display:flex;align-items:center;justify-content:center;font-size:9px;color:#3b82f6;flex-shrink:0;">4</div>k = mg/Δx formuladan qaytadan qattiqlicni toping</div>
+      </div>
+    </div>
+    <button onclick="startLab()" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8);color:#fff;border:none;border-radius:12px;padding:15px 60px;font-size:15px;font-weight:800;font-family:'Syne',sans-serif;cursor:pointer;box-shadow:0 8px 30px rgba(59,130,246,.35);width:100%;">▶ Laboratoriyani boshlash</button>
+    <div style="display:flex;align-items:center;gap:6px;opacity:.6;"><span>🔬</span><span style="font-family:'Space Mono',monospace;font-size:10px;font-weight:700;background:linear-gradient(90deg,#3b82f6,#6fff5c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:1px;">Xosiyat Virtual Lab</span></div>
+  </div>
+</div>
+<style>
+@keyframes pulseEl{0%,100%{box-shadow:0 0 55px rgba(59,130,246,.2)}50%{box-shadow:0 0 80px rgba(59,130,246,.5)}}
+@keyframes fadeOut{0%{opacity:1}100%{opacity:0;transform:scale(1.04)}}
+</style>
+<script>
+(function(){var c=document.getElementById('bgCanvas');var x=c.getContext('2d');var pts=[];function rs(){c.width=window.innerWidth;c.height=window.innerHeight;}rs();window.addEventListener('resize',rs);for(var i=0;i<50;i++)pts.push({x:Math.random()*1600,y:Math.random()*900,r:Math.random()*1.5+.5,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,a:Math.random()});function fr(){x.clearRect(0,0,c.width,c.height);pts.forEach(function(p){p.x+=p.vx;p.y+=p.vy;p.a+=.005;if(p.x<0)p.x=c.width;if(p.x>c.width)p.x=0;if(p.y<0)p.y=c.height;if(p.y>c.height)p.y=0;x.fillStyle='rgba(59,130,246,'+(0.15+Math.sin(p.a)*0.12)+')';x.beginPath();x.arc(p.x%c.width,p.y%c.height,p.r,0,Math.PI*2);x.fill();});requestAnimationFrame(fr);}fr();})();
+function startLab(){var s=document.getElementById('startScreen');s.style.animation='fadeOut .5s ease forwards';setTimeout(function(){s.style.display='none';},480);}
+</script>
+
+<header>
+  <div class="badge">MEXANIKA · LAB</div>
+  <h1 class="htitle">Prujina Elastikligi — <span>Guk Qonuni: F = k·Δx</span></h1>
+  <div class="hsub">MEXANIKA · FIZPRAKTIKUM · SDPI 2025</div>
+  <div class="brand"><span>🔬</span><span class="brand-txt">Xosiyat Virtual Lab</span></div>
+</header>
+<div class="statusbar">
+  <div class="dot" id="dot"></div>
+  <span id="statusTxt">m va k ni tanlang → Δx va F hisoblanadi → T davrini aniqlang</span>
+  <div class="chips">
+    <div class="chip">m=<span id="cM">0.5</span>kg</div>
+    <div class="chip">k=<span id="cK">20</span>N/m</div>
+    <div class="chip">Δx=<span id="cDx">—</span>m</div>
+    <div class="chip">O'lchov:<span id="chipCnt">0</span></div>
+  </div>
+</div>
+<div class="body">
+<div class="left">
+  <div class="stitle">Yuk massasi (m)</div>
+  <div class="card">
+    <label>m (kg) <span class="vb" id="dM">0.5 kg</span></label>
+    <input type="range" id="sM" min="0.1" max="2.0" step="0.1" value="0.5" oninput="setMv(this.value)">
+  </div>
+  <div class="stitle">Prujina qattiqligi (k)</div>
+  <div class="card">
+    <label>k (N/m) <span class="vb" id="dK">20 N/m</span></label>
+    <input type="range" id="sK" min="5" max="100" step="5" value="20" oninput="setKv(this.value)">
+  </div>
+  <div class="fbox">
+    <div class="frow"><span class="fl">F</span><span class="fe">= k · Δx = mg</span></div>
+    <div class="frow"><span class="fl">Δx</span><span class="fe">= mg / k</span></div>
+    <div class="frow"><span class="fl">T</span><span class="fe">= 2π · √(m/k)</span></div>
+    <div class="frow"><span class="fl">k*</span><span class="fe">= mg / Δx (tajriba)</span></div>
+  </div>
+  <div class="steps">
+    <div class="step active" id="st1"><div class="snum">1</div>m va k tanlang</div>
+    <div class="step" id="st2"><div class="snum">2</div>Δx hisoblanmoqda</div>
+    <div class="step" id="st3"><div class="snum">3</div>T davri aniqlang</div>
+    <div class="step" id="st4"><div class="snum">4</div>O'lchov yozing</div>
+    <div class="step" id="st5"><div class="snum">5</div>Tahlil</div>
+  </div>
+  <button class="btn btn-p" onclick="addMeas()">+ O'lchovni yozish</button>
+  <button class="btn btn-r" onclick="resetAll()">↺ Tozalash</button>
+</div>
+<div class="center">
+  <canvas id="simCanvas"></canvas>
+  <div class="instr-bar">🌀 Prujina Guk qonuniga bo'ysunadi: F = k·Δx · Yuk ta'sirida prujina cho'ziladi · Muvozanat holatida: F_elastik = mg</div>
+</div>
+<div class="right">
+  <div class="stitle">Joriy hisob-kitob</div>
+  <div class="two">
+    <div class="rc hi"><div class="rl">F = mg (N)</div><div class="rv" id="rF">—</div><div class="ru">Newton</div></div>
+    <div class="rc hi"><div class="rl">Δx cho'zilish</div><div class="rv" style="color:var(--accent)" id="rDx">—</div><div class="ru">metr</div></div>
+  </div>
+  <div class="two">
+    <div class="rc"><div class="rl">T (davr)</div><div class="rv" style="font-size:14px;color:var(--yellow)" id="rT">—</div><div class="ru">sekund</div></div>
+    <div class="rc"><div class="rl">k* (tajriba)</div><div class="rv" style="font-size:14px;color:var(--green)" id="rKstar">—</div><div class="ru">N/m</div></div>
+  </div>
+  <div class="stitle">Jadval: F = k·Δx</div>
+  <table>
+    <thead><tr><th>№</th><th>m(kg)</th><th>k(N/m)</th><th>F(N)</th><th>Δx(m)</th><th>T(s)</th><th>k*(N/m)</th></tr></thead>
+    <tbody id="tbody"></tbody>
+  </table>
+  <div class="stitle">Grafik: F = f(Δx)</div>
+  <canvas id="graphCanvas" height="110"></canvas>
+  <div class="final-card" id="finalCard">
+    <div class="rl">Yakuniy natija — Guk qonuni</div>
+    <div class="rv" style="color:var(--accent);font-size:16px;margin-top:6px;" id="resMain">—</div>
+    <div class="err-row"><span>O'rt. k* (tajriba)</span><span id="resK">—</span></div>
+    <div class="err-row"><span>Berilgan k</span><span id="resKth">—</span></div>
+    <div class="err-row"><span>O'lchashlar</span><span id="resCnt">—</span></div>
+  </div>
+</div>
+</div>
+<div style="position:fixed;bottom:14px;right:18px;display:flex;align-items:center;gap:7px;background:rgba(7,9,15,.75);border:1px solid rgba(59,130,246,.2);border-radius:30px;padding:5px 16px;backdrop-filter:blur(10px);z-index:9999;pointer-events:none;">
+  <span>🔬</span><span style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;background:linear-gradient(90deg,#3b82f6,#6fff5c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:1px;">Xosiyat Virtual Lab</span>
+</div>
+<script>
+var G=9.81,Mv=0.5,Kv=20,measList=[],cnt=0,animT=0;
+var sc=document.getElementById('simCanvas'),ctx=sc.getContext('2d');
+var gc=document.getElementById('graphCanvas'),gctx=gc.getContext('2d');
+function setMv(v){Mv=parseFloat(v);document.getElementById('dM').textContent=v+' kg';document.getElementById('cM').textContent=v;upd();}
+function setKv(v){Kv=parseFloat(v);document.getElementById('dK').textContent=v+' N/m';document.getElementById('cK').textContent=v;upd();}
+function upd(){
+  var F=Mv*G,dx=F/Kv,T=2*Math.PI*Math.sqrt(Mv/Kv),kstar=F/dx;
+  document.getElementById('rF').textContent=F.toFixed(3);
+  document.getElementById('rDx').textContent=dx.toFixed(4);
+  document.getElementById('cDx').textContent=dx.toFixed(3);
+  document.getElementById('rT').textContent=T.toFixed(3);
+  document.getElementById('rKstar').textContent=kstar.toFixed(2);
+  document.getElementById('statusTxt').textContent='F='+F.toFixed(3)+'N | Δx='+dx.toFixed(4)+'m | T='+T.toFixed(3)+'s | k*='+kstar.toFixed(2)+'N/m';
+  setStep(2);
+}
+function addMeas(){
+  cnt++;var F=Mv*G,dx=F/Kv,T=2*Math.PI*Math.sqrt(Mv/Kv),kstar=F/dx;
+  measList.push({m:Mv,k:Kv,F:F,dx:dx,T:T,kstar:kstar});
+  document.getElementById('chipCnt').textContent=cnt;
+  var tr=document.createElement('tr');
+  tr.innerHTML='<td>'+cnt+'</td><td>'+Mv+'</td><td>'+Kv+'</td><td>'+F.toFixed(3)+'</td><td>'+dx.toFixed(4)+'</td><td>'+T.toFixed(3)+'</td><td>'+kstar.toFixed(2)+'</td>';
+  document.getElementById('tbody').appendChild(tr);
+  setStep(4);
+  if(measList.length>=2){
+    var sK=measList.reduce(function(a,b){return a+b.kstar;},0)/measList.length;
+    document.getElementById('finalCard').style.display='block';
+    document.getElementById('resMain').textContent='Guk qonuni tasdiqlandi! k*='+sK.toFixed(2)+' N/m';
+    document.getElementById('resK').textContent=sK.toFixed(2)+' N/m';
+    document.getElementById('resKth').textContent=Kv+' N/m';
+    document.getElementById('resCnt').textContent=measList.length+' ta';
+    setStep(5);
+  }
+  drawGraph();
+}
+function resetAll(){measList=[];cnt=0;document.getElementById('tbody').innerHTML='';document.getElementById('finalCard').style.display='none';document.getElementById('chipCnt').textContent=0;setStep(1);upd();drawGraph();}
+function setStep(n){for(var i=1;i<=5;i++){var el=document.getElementById('st'+i);el.className='step'+(i<n?' done':i===n?' active':'');el.querySelector('.snum').textContent=i<n?'✓':i;}}
+function resize(){sc.width=sc.offsetWidth;sc.height=sc.offsetHeight;}
+window.addEventListener('resize',resize);setTimeout(resize,80);
+(function loop(){animT+=0.016;drawSim();requestAnimationFrame(loop);})();
+function drawSim(){
+  var W=sc.width,H=sc.height;if(!W||!H)return;
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#040810';ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle='rgba(59,130,246,.02)';ctx.lineWidth=1;
+  for(var xi=0;xi<W;xi+=60){ctx.beginPath();ctx.moveTo(xi,0);ctx.lineTo(xi,H);ctx.stroke();}
+  for(var yi=0;yi<H;yi+=60){ctx.beginPath();ctx.moveTo(0,yi);ctx.lineTo(W,yi);ctx.stroke();}
+  var cx=W/2,topY=40,dx_m=Mv*G/Kv,maxDx=2.0*9.81/5;
+  var springLen=H*0.25,yukSize=50,yukY=topY+springLen+dx_m/maxDx*H*0.3;
+  // Mahkamlangan joy
+  ctx.fillStyle='#1a2840';ctx.fillRect(cx-60,topY-12,120,12);
+  ctx.strokeStyle='rgba(59,130,246,.3)';ctx.lineWidth=1.5;
+  for(var i=0;i<6;i++){ctx.beginPath();ctx.moveTo(cx-60+i*22,topY-12);ctx.lineTo(cx-60+i*22-8,topY-22);ctx.stroke();}
+  // Prujina zigzag
+  var turns=14,step2=(yukY-topY)/turns;
+  ctx.strokeStyle='rgba(59,130,246,.8)';ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(cx,topY);
+  for(var i=0;i<=turns;i++){var px=cx+(i%2===0?18:-18);if(i===0||i===turns)px=cx;ctx.lineTo(px,topY+i*step2);}
+  ctx.stroke();
+  // Prujina glow
+  ctx.shadowColor='rgba(59,130,246,.4)';ctx.shadowBlur=10;ctx.stroke();ctx.shadowBlur=0;
+  // Yuk
+  var gr=ctx.createLinearGradient(cx-yukSize/2,yukY,cx+yukSize/2,yukY+yukSize);
+  gr.addColorStop(0,'#2040a0');gr.addColorStop(1,'#102060');
+  ctx.fillStyle=gr;rr(ctx,cx-yukSize/2,yukY,yukSize,yukSize,6);ctx.fill();
+  ctx.strokeStyle='rgba(59,130,246,.7)';ctx.lineWidth=1.5;rr(ctx,cx-yukSize/2,yukY,yukSize,yukSize,6);ctx.stroke();
+  ctx.shadowColor='rgba(59,130,246,.4)';ctx.shadowBlur=10;ctx.fill();ctx.shadowBlur=0;
+  ctx.fillStyle='#fff';ctx.font='bold 11px Syne';ctx.textAlign='center';ctx.fillText(Mv+'kg',cx,yukY+yukSize/2+5);
+  // Og'irlik strelkasi
+  ctx.strokeStyle='rgba(255,96,96,.7)';ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(cx+yukSize/2+15,yukY+yukSize/2);ctx.lineTo(cx+yukSize/2+15,yukY+yukSize/2+40);ctx.stroke();
+  ctx.fillStyle='rgba(255,96,96,.7)';ctx.beginPath();ctx.moveTo(cx+yukSize/2+15,yukY+yukSize/2+40);ctx.lineTo(cx+yukSize/2+9,yukY+yukSize/2+28);ctx.lineTo(cx+yukSize/2+21,yukY+yukSize/2+28);ctx.closePath();ctx.fill();
+  ctx.fillStyle='rgba(255,96,96,.7)';ctx.font='9px monospace';ctx.textAlign='left';ctx.fillText('mg='+(Mv*G).toFixed(1)+'N',cx+yukSize/2+20,yukY+yukSize/2+28);
+  // Δx strelka
+  var dx_px=(dx_m/maxDx)*H*0.3;
+  ctx.strokeStyle='rgba(111,255,92,.4)';ctx.lineWidth=1;ctx.setLineDash([3,5]);
+  ctx.beginPath();ctx.moveTo(cx-yukSize/2-20,topY+springLen);ctx.lineTo(cx-yukSize/2-20,yukY);ctx.stroke();ctx.setLineDash([]);
+  ctx.fillStyle='rgba(111,255,92,.7)';ctx.font='9px monospace';ctx.textAlign='right';
+  ctx.fillText('Δx='+(Mv*G/Kv).toFixed(3)+'m',cx-yukSize/2-25,(topY+springLen+yukY)/2+3);
+  // Info
+  ctx.fillStyle='rgba(14,20,32,.88)';rr(ctx,14,14,195,60,7);ctx.fill();
+  ctx.strokeStyle='rgba(59,130,246,.2)';ctx.lineWidth=1;rr(ctx,14,14,195,60,7);ctx.stroke();
+  ctx.fillStyle='rgba(59,130,246,.8)';ctx.font='bold 9px Space Mono';ctx.textAlign='left';
+  ctx.fillText('m='+Mv+'kg  k='+Kv+'N/m',22,30);
+  ctx.fillStyle='rgba(255,201,71,.7)';ctx.font='9px monospace';
+  ctx.fillText('F='+(Mv*G).toFixed(2)+'N  Δx='+(Mv*G/Kv).toFixed(4)+'m',22,44);
+  ctx.fillStyle='rgba(111,255,92,.7)';ctx.fillText('T='+( 2*Math.PI*Math.sqrt(Mv/Kv)).toFixed(3)+'s',22,58);
+}
+function rr(c,x,y,w,h,r){c.beginPath();c.moveTo(x+r,y);c.lineTo(x+w-r,y);c.quadraticCurveTo(x+w,y,x+w,y+r);c.lineTo(x+w,y+h-r);c.quadraticCurveTo(x+w,y+h,x+w-r,y+h);c.lineTo(x+r,y+h);c.quadraticCurveTo(x,y+h,x,y+h-r);c.lineTo(x,y+r);c.quadraticCurveTo(x,y,x+r,y);c.closePath();}
+function drawGraph(){
+  var W2=gc.offsetWidth||240;gc.width=W2;var GH=110;
+  gctx.clearRect(0,0,W2,GH);gctx.fillStyle='#070c17';gctx.fillRect(0,0,W2,GH);
+  var pad=30,gW=W2-pad*2,gHH=GH-pad-8;
+  gctx.strokeStyle='rgba(59,130,246,.3)';gctx.lineWidth=1;
+  gctx.beginPath();gctx.moveTo(pad,8);gctx.lineTo(pad,GH-pad);gctx.lineTo(W2-pad+6,GH-pad);gctx.stroke();
+  gctx.fillStyle='rgba(59,130,246,.5)';gctx.font='7px monospace';gctx.textAlign='center';gctx.fillText('Δx(m)',W2-pad+10,GH-pad+3);
+  gctx.textAlign='right';gctx.fillText('F(N)',pad-3,12);
+  if(!measList.length)return;
+  var dxv=measList.map(function(m){return m.dx;}),fv=measList.map(function(m){return m.F;});
+  var minDx=0,maxDx=Math.max.apply(null,dxv)*1.3,minF=0,maxF=Math.max.apply(null,fv)*1.3;
+  measList.forEach(function(m){
+    var px=pad+(m.dx/maxDx)*gW,py=GH-pad-(m.F/maxF)*gHH;
+    gctx.fillStyle='rgba(59,130,246,.9)';gctx.beginPath();gctx.arc(px,py,5,0,Math.PI*2);gctx.fill();
+  });
+}
+window.addEventListener('load',function(){setTimeout(function(){resize();upd();drawGraph();},100);});
+</script>
+</body>
+</html>
